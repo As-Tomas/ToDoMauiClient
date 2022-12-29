@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ToDoMauiClient.Models
 {
-    internal class ToDo : INotifyPropertyChanged
+    public class ToDo : INotifyPropertyChanged
     {
         int _id;
         public int Id
