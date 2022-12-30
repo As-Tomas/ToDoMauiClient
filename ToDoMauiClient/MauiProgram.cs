@@ -1,4 +1,6 @@
-﻿namespace ToDoMauiClient;
+﻿using ToDoMauiClient.DataServices;
+
+namespace ToDoMauiClient;
 
 public static class MauiProgram
 {
@@ -13,6 +15,7 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
+		builder.Services.AddSingleton<IRestDataService, RestDataService>();
 		return builder.Build();
 	}
 }
