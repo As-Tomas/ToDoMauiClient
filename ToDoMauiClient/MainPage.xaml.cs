@@ -1,7 +1,7 @@
-﻿using Microsoft.Maui.Controls.Compatibility.Platform.UWP;
+﻿
 using System.Diagnostics;
 using ToDoMauiClient.DataServices;
-using Windows.Graphics.Display;
+
 
 namespace ToDoMauiClient;
 
