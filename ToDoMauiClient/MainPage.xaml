@@ -9,7 +9,13 @@
     </ContentPage.ToolbarItems>
     <CollectionView x:Name="collectionView"
                     SelectionMode="Single"
-                    SelectionChanged="OnSelectioChanged">
+                    SelectionChanged="OnSelectioChanged"
+                    Margin="30">
+
+        <CollectionView.ItemsLayout>
+            <LinearItemsLayout Orientation="Vertical" ItemSpacing="20"/>
+        </CollectionView.ItemsLayout>
+        
         <CollectionView.ItemTemplate>
             <DataTemplate>
                 <Label Text="{Binding ToDoName}" FontSize="Medium"/>
