@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -13,7 +14,7 @@ namespace ToDoMauiClient.DataServices
         private readonly HttpClient _httpClient;
         private readonly string _baseAddress;
         private readonly string _url;
-        private readonly JsonSerializerOptions _jsonSerializerOptioins;
+        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
         public RestDataService()
         {
@@ -21,7 +22,7 @@ namespace ToDoMauiClient.DataServices
             _baseAddress = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5130" : "https://localhost:7154";
             _url = $"{_baseAddress}/api";
 
-            _jsonSerializerOptioins = new JsonSerializerOptions
+            _jsonSerializerOptions = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
@@ -38,9 +39,37 @@ namespace ToDoMauiClient.DataServices
             throw new NotImplementedException();
         }
 
-        public Task<List<ToDo>> GetAllToDosAsync()
+        public async Task<List<ToDo>> GetAllToDosAsync()
         {
-            throw new NotImplementedException();
+            List<ToDo> todos = new List<ToDo>();
+
+            if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
+            {
+                Debug.WriteLine("---> No internet access...");
+                return todos;
+            }
+
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync($"{_url}/todo");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string content = await response.Content.ReadAsStringAsync();
+
+                    todos = JsonSerializer.Deserialize<List<ToDo>>(content, _jsonSerializerOptions);
+                }
+                else
+                {
+                    Debug.WriteLine("---> Non Http 2xx response");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Whoops exception: {ex.Message}");
+            }
+
+            return todos;
         }
 
         public Task UpdateToDoAsync(ToDo toDo)
